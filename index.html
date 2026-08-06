@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mi Primera Página</title>
+    <title>blask store</title>
     <style>
         body {
             font-family: Arial;
@@ -20,12 +20,36 @@
             font-size: 18px;
         }
         .boton:hover { background: #2980b9; }
+        .espera {
+            color: red;
+            font-size: 22px;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
-    <h1>¡Bienvenidos a mi página!</h1>
-    <p>Esta es mi primera página web creada por mí.</p>
-    <br>
-    <a href="pagina2.html" class="boton">Ir a la siguiente página</a>
+    <h1>¡Bienvenidos a blask store!</h1>
+    <p>Página web creada por user.</p>
+    <p>Espera unos segundos para continuar...</p>
+    <p class="espera" id="contador">5</p>
+
+    <script>
+        // Cuenta regresiva de 5 segundos y redirige automáticamente
+        let tiempo = 5;
+        let contador = document.getElementById('contador');
+        
+        let cuenta = setInterval(function() {
+            tiempo--;
+            contador.textContent = tiempo;
+            
+            if(tiempo <= 0) {
+                clearInterval(cuenta);
+                window.location.href = "archivos.html";
+            }
+        }, 1000);
+    </script>
+
+    <br><br>
+    <a href="archivos.html" class="boton">Ir ahora</a>
 </body>
 </html>
