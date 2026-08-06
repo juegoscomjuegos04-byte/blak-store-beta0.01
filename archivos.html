@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prueba de Acceso</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #1a1a1a;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .caja {
+            background: #2d2d2d;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            width: 320px;
+            text-align: center;
+        }
+        h2 { color: #4CAF50; margin-bottom: 30px; }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 17px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        button:hover { background: #45a049; }
+        .error {
+            color: #ff4444;
+            margin-top: 15px;
+            display: none;
+        }
+        .oculto { display: none; }
+        .exito { color: #4CAF50; font-size: 20px; }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA DE LOGIN -->
+    <div id="pantalla-login" class="caja">
+        <h2>🔒 Área Restringida</h2>
+        <input type="text" id="usuario" placeholder="Nombre de usuario">
+        <input type="password" id="contrasena" placeholder="Contraseña">
+        <button onclick="verificar()">Ingresar</button>
+        <p id="mensaje-error" class="error">❌ Usuario o contraseña incorrectos</p>
+    </div>
+
+    <!-- PANTALLA DE ÉXITO (solo aparece si aciertas) -->
+    <div id="pantalla-exito" class="caja oculto">
+        <h2 class="exito">✅ ¡Acceso Concedido!</h2>
+        <p>Has ingresado correctamente.</p>
+        <p>Aquí puedes poner lo que quieras mostrar después de entrar.</p>
+    </div>
+
+<script>
+    // === TUS DATOS DE ACCESO ===
+    const USUARIO_CORRECTO = "admin";
+    const CONTRASENA_CORRECTA = "1234";
+
+    function verificar() {
+        // Leer lo que escribió el usuario
+        let usuario = document.getElementById('usuario').value;
+        let pass = document.getElementById('contrasena').value;
+        let error = document.getElementById('mensaje-error');
+
+        // COMPROBAR SI SON CORRECTOS
+        if(usuario === USUARIO_CORRECTO && pass === CONTRASENA_CORRECTA) {
+            // ✅ Si es correcto: cambia de pantalla
+            document.getElementById('pantalla-login').classList.add('oculto');
+            document.getElementById('pantalla-exito').classList.remove('oculto');
+        } else {
+            // ❌ Si es incorrecto: muestra error pero NO avanza
+            error.style.display = "block";
+            // Borra lo escrito para intentar de nuevo
+            document.getElementById('usuario').value = "";
+            document.getElementById('contrasena').value = "";
+        }
+    }
+</script>
+
+</body>
+</html>
