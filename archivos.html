@@ -1,461 +1,262 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Blask Store - Descargas</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blask Store</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            color: white;
-            padding: 30px 20px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         }
 
-        /* === FONDO ANIMADO DE PARTÍCULAS === */
-        #fondo-particulas {
-            position: fixed;
-            top: 0;
-            left: 0;
+        body {
+            background: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* === CONTENEDOR PRINCIPAL === */
+        .contenedor {
             width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
+            max-width: 600px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            padding: 40px 30px;
+            text-align: center;
         }
 
         h1 {
-            text-align: center;
-            font-size: 36px;
+            font-size: 28px;
+            color: #1a1a2e;
             margin-bottom: 10px;
-            position: relative; z-index: 1;
-            text-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
-        }
-        .descripcion {
-            text-align: center;
-            color: #ccc;
-            margin-bottom: 30px;
-            position: relative; z-index: 1;
+            font-weight: 600;
         }
 
-        /* === CAJA DE POLÍTICAS === */
-        .caja-politicas {
-            background: rgba(255,255,255,0.95);
-            color: #222;
-            max-width: 550px;
-            margin: 30px auto;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.4);
-            position: relative; z-index: 2;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-        .caja-politicas h2 {
-            text-align: center;
-            color: #2c3e50;
-            margin-bottom: 15px;
-            font-size: 22px;
-        }
-        .caja-politicas p {
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        .caja-politicas .acepto {
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: bold;
+        .subtitulo {
+            color: #6c757d;
             font-size: 15px;
-            cursor: pointer;
+            margin-bottom: 35px;
         }
-        .caja-politicas .acepto input {
-            cursor: pointer;
-            width: 18px;
-            height: 18px;
+
+        /* === ⏳ PANTALLA DE ESPERA === */
+        .contador-grande {
+            font-size: 64px;
+            font-weight: 700;
+            color: #2563eb;
+            margin: 30px 0;
         }
-        .caja-politicas button {
+
+        .barra-progreso {
             width: 100%;
-            padding: 14px;
-            margin-top: 20px;
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .barra-llena {
+            height: 100%;
+            width: 0%;
+            background: #2563eb;
+            border-radius: 3px;
+            transition: width 1s linear;
+        }
+
+        /* === 🔐 PANTALLA DE CONTRASEÑA === */
+        .caja-input {
+            margin: 25px 0;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            max-width: 320px;
+            padding: 14px 18px;
+            font-size: 16px;
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+            outline: none;
+            transition: border 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        input:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        button {
+            padding: 13px 36px;
+            font-size: 16px;
+            background: #2563eb;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 17px;
-            font-weight: bold;
+            border-radius: 10px;
             cursor: pointer;
-            transition: 0.3s;
+            font-weight: 500;
+            transition: background 0.3s, transform 0.2s;
         }
-        .caja-politicas button:hover { transform: scale(1.03); }
-        .caja-politicas button:disabled { background: #aaa; cursor: not-allowed; transform: none; }
 
-        /* === CARPETAS Y ENLACES === */
-        .contenido { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
-        
-        .carpeta {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 12px;
-            margin: 15px 0;
-            overflow: hidden;
+        button:hover {
+            background: #1d4ed8;
         }
-        .carpeta-titulo {
-            padding: 14px 20px;
-            background: rgba(0,255,136,0.1);
-            color: #00ff88;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .carpeta-titulo:hover { background: rgba(0,255,136,0.15); }
-        .carpeta-contenido {
-            padding: 10px 15px;
+
+        #error {
+            color: #dc2626;
+            margin-top: 15px;
+            font-size: 14px;
             display: none;
         }
-        .carpeta.abierta .carpeta-contenido {
-            display: block;
-        }
-        .enlace {
-            display: block;
-            padding: 12px 18px;
-            margin: 8px 0;
-            background: linear-gradient(135deg, #27ae60, #2ecc71);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            transition: 0.3s;
-            box-shadow: 0 4px 12px rgba(39,174,96,0.25);
-        }
-        .enlace:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(39,174,96,0.4);
-        }
 
-        /* === SECCIÓN SUBIR ARCHIVOS === */
-        .caja-subir {
-            background: rgba(255,255,255,0.1);
-            border: 2px dashed rgba(255,255,255,0.3);
-            margin: 40px auto 20px;
-            padding: 25px;
-            border-radius: 16px;
-            text-align: center;
-            position: relative; z-index: 1;
-        }
-        .caja-subir h3 { color: #00ff88; margin-bottom: 15px; }
-        .boton-google {
-            background: white;
-            color: #333;
-            padding: 12px 25px;
-            border-radius: 8px;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-        .boton-google:hover { background: #f1f1f1; }
-        .info-usuario {
-            margin-top: 15px;
-            padding: 12px;
-            background: rgba(0,255,136,0.1);
-            border-radius: 8px;
-            font-size: 14px;
-            color: #00ff88;
-        }
-        .area-archivos {
-            margin-top: 15px;
+        /* === 📂 LISTA DE ARCHIVOS === */
+        .lista-archivos {
             text-align: left;
-            background: rgba(0,0,0,0.2);
-            padding: 15px;
-            border-radius: 8px;
-            font-size: 13px;
-            max-height: 250px;
-            overflow-y: auto;
+            margin-top: 25px;
         }
 
-        /* === CLASES OCULTAS === */
+        .archivo-enlace {
+            display: block;
+            padding: 14px 18px;
+            margin: 8px 0;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 15px;
+            transition: all 0.25s;
+        }
+
+        .archivo-enlace:hover {
+            background: #eff6ff;
+            border-color: #bfdbfe;
+            color: #1d4ed8;
+        }
+
+        .etiqueta-descarga {
+            float: right;
+            color: #2563eb;
+            font-weight: 500;
+        }
+
         .oculto { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- === FONDO ANIMADO === -->
-    <canvas id="fondo-particulas"></canvas>
+    <div class="contenedor">
 
-    <!-- === CAJA DE POLÍTICAS === -->
-    <div id="caja-politicas" class="caja-politicas">
-        <h2>📜 Políticas de Uso y Privacidad</h2>
-        
-        <p><strong>1️⃣ Sobre los archivos:</strong><br>
-        Los juegos, aplicaciones y archivos compartidos en Blask Store <strong>NO han sido verificados oficialmente</strong>. Se proporcionan tal cual, sin garantías de ningún tipo.</p>
-        
-        <p><strong>2️⃣ Tu responsabilidad:</strong><br>
-        La descarga y uso de estos archivos es <strong>bajo tu propia responsabilidad</strong>. Te recomiendo analizar los archivos antes de abrirlos en tu dispositivo.</p>
-        
-        <p><strong>3️⃣ Mi responsabilidad:</strong><br>
-        No me hago responsable por daños, pérdidas o problemas que puedan surgir al usar el contenido compartido aquí. Tú decides en qué confiar.</p>
-        
-        <p><strong>4️⃣ Subir archivos:</strong><br>
-        Al subir contenido, aceptas compartir material que no dañe a otros. Se registrará tu cuenta para mantener seguridad.</p>
-
-        <label class="acepto">
-            <input type="checkbox" id="acepto">
-            He leído y acepto las políticas de uso
-        </label>
-
-        <button id="boton-entrar" disabled onclick="entrar()">✅ Entrar a las Descargas</button>
-    </div>
-
-    <!-- === CONTENIDO PRINCIPAL CON CARPETAS === -->
-    <div id="contenido" class="oculto">
-        <h1>📂 Tus Descargas</h1>
-        <p class="descripcion">Abre las carpetas para ver los archivos:</p>
-
-        <!-- 📁 CARPETA: JUEGOS DE AVENTURA -->
-        <div class="carpeta" onclick="this.classList.toggle('abierta')">
-            <div class="carpeta-titulo">
-                🎮 Juegos de Aventura
-                <span>▼</span>
-            </div>
-            <div class="carpeta-contenido">
-                <a href="https://www.mediafire.com/file/31zzkrvwaz8t7d3/subnautica_1.21.82792-libreapk.com.apk/file" class="enlace">🌊 Subnautica (2.05 GB)</a>
-                <a href="https://www.mediafire.com/file/ju9w6zcjcx1tfpn/Hollow_Knight_%25283%2529.apk/file" class="enlace">⚔️ Hollow Knight (931 MB)</a>
+        <!-- ⏳ PANTALLA 1: ESPERA 5 SEGUNDOS -->
+        <div id="pantalla-espera">
+            <h1>Bienvenido a Blask Store</h1>
+            <p class="subtitulo">Preparando el acceso...</p>
+            <div class="contador-grande" id="contador">5</div>
+            <div class="barra-progreso">
+                <div class="barra-llena" id="barra"></div>
             </div>
         </div>
 
-        <!-- 📁 CARPETA: SIMULACIÓN Y RELAJACIÓN -->
-        <div class="carpeta" onclick="this.classList.toggle('abierta')">
-            <div class="carpeta-titulo">
-                🌿 Simulación y Relajación
-                <span>▼</span>
+        <!-- 🔐 PANTALLA 2: CONTRASEÑA -->
+        <div id="pantalla-clave" class="oculto">
+            <h1>Verificación de Acceso</h1>
+            <p class="subtitulo">Ingresa tu contraseña para continuar</p>
+            <div class="caja-input">
+                <input type="password" id="clave" placeholder="Escribe tu contraseña..." autocomplete="off">
             </div>
-            <div class="carpeta-contenido">
-                <a href="https://www.mediafire.com/file/qz9p2beze5qv6dn/Slime_Rancher.apk/file" class="enlace">🟢 Slime Rancher (600 MB)</a>
-                <a href="https://www.mediafire.com/file/kcf5kt4caz7o5lx/Daily_Lives_of_My_Countryside_Nekobot_com.nekobot.webview.nekobot_3.4.3_V1.apk/file" class="enlace">🏡 Daily Lives of My Countryside (157 MB)</a>
+            <button onclick="verificarClave()">Acceder</button>
+            <p id="error">Contraseña incorrecta. Inténtalo de nuevo.</p>
+        </div>
+
+        <!-- 📂 PANTALLA 3: ARCHIVOS -->
+        <div id="pantalla-archivos" class="oculto">
+            <h1>Archivos Disponibles</h1>
+            <p class="subtitulo">Selecciona el recurso que deseas descargar</p>
+            <div class="lista-archivos">
+                <a href="https://www.mediafire.com/file/31zzkrvwaz8t7d3/subnautica_1.21.82792-libreapk.com.apk/file" target="_blank" class="archivo-enlace">
+                    🌊 Subnautica <span class="etiqueta-descarga">Descargar</span>
+                </a>
+                <a href="https://www.mediafire.com/file/ju9w6zcjcx1tfpn/Hollow_Knight_%25283%2529.apk/file" target="_blank" class="archivo-enlace">
+                    ⚔️ Hollow Knight <span class="etiqueta-descarga">Descargar</span>
+                </a>
+                <a href="https://www.mediafire.com/file/qz9p2beze5qv6dn/Slime_Rancher.apk/file" target="_blank" class="archivo-enlace">
+                    🟢 Slime Rancher <span class="etiqueta-descarga">Descargar</span>
+                </a>
+                <a href="https://www.mediafire.com/file/kcf5kt4caz7o5lx/Daily_Lives_of_My_Countryside_Nekobot_com.nekobot.webview.nekobot_3.4.3_V1.apk/file" target="_blank" class="archivo-enlace">
+                    🏡 Daily Lives of My Countryside <span class="etiqueta-descarga">Descargar</span>
+                </a>
+                <a href="https://www.mediafire.com/file/egi9gd0dmyxyyny/Apelox_Hub_%2528Copy%2529_1.apk/file" target="_blank" class="archivo-enlace">
+                    📲 Apelox Hub <span class="etiqueta-descarga">Descargar</span>
+                </a>
+                <a href="https://www.mediafire.com/file/qj0ao0y34rlew6e/PROYX_v660.apk/file" target="_blank" class="archivo-enlace">
+                    🔧 PROYX v660 <span class="etiqueta-descarga">Descargar</span>
+                </a>
+                <a href="https://www.mediafire.com/file/1cx2vxdlx2vg5gk/PROXY+GRINGOXP+V9.apk/file" target="_blank" class="archivo-enlace">
+                    🔐 PROXY GRINGOXP V9 <span class="etiqueta-descarga">Descargar</span>
+                </a>
+                <a href="https://www.mediafire.com/file/zj5cgwyrfm7kixj/PANEL+V1+AMERICAN+MODZ+OFC.apk/file" target="_blank" class="archivo-enlace">
+                    🇺🇸 PANEL V1 American Modz <span class="etiqueta-descarga">Descargar</span>
+                </a>
+                <a href="https://www.mediafire.com/file/u2opgiizog54fds/DPCLT-APKM0D-GLOBAL-v1.4x.apks/file" target="_blank" class="archivo-enlace">
+                    🎮 DPCLT - APKM0D v1.4x <span class="etiqueta-descarga">Descargar</span>
+                     <a href="https://www.mediafire.com/file/9dgz3rrnis58cmu/Villager_Soldier_2_Version_3.1.4_The_Rise_By_Blockdestroyer.mcaddon/file/file" target="_blank" class="archivo-enlace">
+                    Villager_Soldier_2_Version_3.1.4_The_Rise_By_Blockdestroyer.mcaddon <span class="etiqueta-descarga">Descargar</span>
+                </a>
             </div>
         </div>
 
-        <!-- 📁 CARPETA: HERRAMIENTAS Y APLICACIONES -->
-        <div class="carpeta" onclick="this.classList.toggle('abierta')">
-            <div class="carpeta-titulo">
-                📱 Herramientas y Apps
-                <span>▼</span>
-            </div>
-            <div class="carpeta-contenido">
-                <a href="https://www.mediafire.com/file/egi9gd0dmyxyyny/Apelox_Hub_%2528Copy%2529_1.apk/file" class="enlace">📲 Apelox Hub</a>
-                <a href="https://www.mediafire.com/file/qj0ao0y34rlew6e/PROYX_v660.apk/file" class="enlace">🔧 PROYX v660 (2.46 MB)</a>
-                <a href="https://www.mediafire.com/file/1cx2vxdlx2vg5gk/PROXY+GRINGOXP+V9.apk/file" class="enlace">🔐 PROXY GRINGOXP v9</a>
-                <a href="https://www.mediafire.com/file/zj5cgwyrfm7kixj/PANEL+V1+AMERICAN+MODZ+OFC.apk/file" class="enlace">🇺🇸 PANEL V1 - American Modz Ofc</a>
-                <a href="https://www.mediafire.com/file/u2opgiizog54fds/DPCLT-APKM0D-GLOBAL-v1.4x.apks/file" class="enlace">🎮 DPCLT - APKM0D v1.4x (542 MB)</a>
-            </div>
-        </div>
-
-        <!-- === SECCIÓN SUBIR TUS ARCHIVOS === -->
-        <div class="caja-subir">
-            <h3>📤 Subir tu propio archivo</h3>
-            <p style="color:#aaa; font-size:14px;">Escribe tu nombre y correo para verificar que eres persona real</p>
-            
-            <button class="boton-google" onclick="iniciarSesionGoogle()">
-                🔑 Iniciar sesión
-            </button>
-
-            <div id="info-usuario" class="info-usuario oculto">
-                ✅ Conectado como:<br>
-                <strong id="nombre-usuario"></strong><br>
-                📧 Correo: <span id="correo-usuario"></span>
-            </div>
-
-            <div id="area-subida" class="oculto">
-                <input type="file" id="archivo-subir" style="margin:15px 0;">
-                <button onclick="guardarSubida()" style="padding:10px 20px; background:#27ae60; color:white; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">📤 Subir y Registrar</button>
-                
-                <div class="area-archivos" id="lista-subidas">
-                    📋 Archivos subidos y quién los subió:<br>
-                    (Solo el administrador ve los correos)
-                </div>
-            </div>
-        </div>
     </div>
 
 <script>
-    // ==============================================
-    // ⚙️ CONFIGURACIÓN — TUS DATOS YA ESTÁN PUESTOS
-    // ==============================================
-    const ADMIN_CORREO = "juegos.com.juegos05@gmail.com";  // ✅ CORREGIDO
-    const CONTRASENA_ADMIN = "aurora";                       // ✅ TU CONTRASEÑA
+    // ⚙️ CONFIGURACIÓN
+    const CONTRASENA_CORRECTA = "admin";
 
-    // === ACTIVAR BOTÓN AL ACEPTAR POLÍTICAS ===
-    document.addEventListener('DOMContentLoaded', () => {
-        const checkbox = document.getElementById('acepto');
-        const botonEntrar = document.getElementById('boton-entrar');
-        
-        if (checkbox && botonEntrar) {
-            checkbox.addEventListener('change', function() {
-                botonEntrar.disabled = !this.checked;
-            });
+    // ⏳ CONTADOR DE 5 SEGUNDOS
+    let segundos = 5;
+    const contador = document.getElementById('contador');
+    const barra = document.getElementById('barra');
+
+    const intervalo = setInterval(() => {
+        segundos--;
+        contador.textContent = segundos;
+        barra.style.width = `${(5 - segundos) * 20}%`;
+
+        if (segundos <= 0) {
+            clearInterval(intervalo);
+            // PASAR A PANTALLA DE CONTRASEÑA
+            document.getElementById('pantalla-espera').classList.add('oculto');
+            document.getElementById('pantalla-clave').classList.remove('oculto');
+            document.getElementById('clave').focus();
         }
-    });
+    }, 1000);
 
-    // === ENTRAR A LAS DESCARGAS ===
-    function entrar() {
-        document.getElementById('caja-politicas').classList.add('oculto');
-        document.getElementById('contenido').classList.remove('oculto');
-    }
+    // 🔐 VERIFICAR CONTRASEÑA
+    function verificarClave() {
+        const claveIngresada = document.getElementById('clave').value;
+        const error = document.getElementById('error');
 
-    // ==============================================
-    // 🔐 INICIO DE SESIÓN SIMPLE (SIN ERRORES)
-    // ==============================================
-    let usuario = null;
-
-    function iniciarSesionGoogle() {
-        let nombre = prompt("Escribe tu nombre para verificar:");
-        let correo = prompt("Escribe tu correo de Google:");
-
-        if(nombre && correo && correo.includes('@')) {
-            usuario = { 
-                nombre: nombre, 
-                correo: correo, 
-                fecha: new Date().toLocaleString()
-            };
-            
-            document.getElementById('nombre-usuario').textContent = usuario.nombre;
-            document.getElementById('correo-usuario').textContent = usuario.correo;
-            document.getElementById('info-usuario').classList.remove('oculto');
-            document.getElementById('area-subida').classList.remove('oculto');
+        if (claveIngresada === CONTRASENA_CORRECTA) {
+            // ✅ CORRECTA → IR A ARCHIVOS
+            document.getElementById('pantalla-clave').classList.add('oculto');
+            document.getElementById('pantalla-archivos').classList.remove('oculto');
         } else {
-            alert("⚠️ Escribe un correo válido (debe tener @)");
+            // ❌ INCORRECTA → MOSTRAR ERROR
+            error.style.display = 'block';
+            document.getElementById('clave').value = '';
+            document.getElementById('clave').focus();
         }
     }
 
-    // ==============================================
-    // 📤 GUARDAR QUIÉN SUBIÓ QUÉ + CONTRASEÑA ADMIN
-    // ==============================================
-    function guardarSubida() {
-        let archivo = document.getElementById('archivo-subir').files[0];
-        if(!usuario) { alert("Primero inicia sesión"); return; }
-        if(!archivo) { alert("Selecciona un archivo"); return; }
-
-        // 📋 REGISTRO COMPLETO
-        const registro = `
-📄 Archivo: ${archivo.name}
-👤 Subido por: ${usuario.nombre}
-📧 Correo: ${usuario.correo}
-⏰ Fecha: ${usuario.fecha}
-─────────────────────────────
-        `;
-
-        document.getElementById('lista-subidas').innerHTML += "<pre>"+registro+"</pre>";
-
-        // Guarda en el historial
-        let registros = JSON.parse(localStorage.getItem('registros') || '[]');
-        registros.push({
-            archivo: archivo.name,
-            nombre: usuario.nombre,
-            correo: usuario.correo,
-            fecha: usuario.fecha
-        });
-        localStorage.setItem('registros', JSON.stringify(registros));
-
-        alert("✅ ¡Archivo registrado! Si hay problemas, ya tienes su correo para avisarle.");
-        
-        // 🔑 SOLO SI ERES ADMIN: PIDE CONTRASEÑA Y MUESTRA LISTA COMPLETA
-        if(usuario.correo === ADMIN_CORREO) {
-            let clave = prompt("🔐 Escribe la contraseña de administrador:");
-            if(clave === CONTRASENA_ADMIN) {
-                console.log("=== 📋 LISTA COMPLETA DE SUBIDAS ===");
-                registros.forEach(r => {
-                    console.log("─────────────────────────────");
-                    console.log("📄 Archivo:", r.archivo);
-                    console.log("👤 Subido por:", r.nombre);
-                    console.log("📧 Correo:", r.correo);
-                    console.log("⏰ Fecha:", r.fecha);
-                });
-                alert("🔐 ¡Contraseña correcta! Abre la consola (F12 o Ctrl+Shift+J) para ver TODOS los correos.");
-            } else {
-                alert("❌ Contraseña incorrecta. No puedes ver la lista completa.");
-            }
-        }
-    }
-
-    // ==============================================
-    // ✨ ANIMACIÓN DE PARTÍCULAS DEL FONDO
-    // ==============================================
-    const canvas = document.getElementById('fondo-particulas');
-    const ctx = canvas.getContext('2d');
-    let particulas = [];
-
-    function ajustarCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', ajustarCanvas);
-    ajustarCanvas();
-
-    class Particula {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.tamano = Math.random() * 3 + 1;
-            this.vx = (Math.random() - 0.5) * 0.5;
-            this.vy = (Math.random() - 0.5) * 0.5;
-            this.color = `rgba(100, 180, 255, ${Math.random()*0.4+0.2})`;
-        }
-        actualizar() {
-            this.x += this.vx;
-            this.y += this.vy;
-            if(this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-            }
-        }
-        dibujar() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.tamano, 0, Math.PI * 2);
-            ctx.fillStyle = this.color;
-            ctx.fill();
-        }
-    }
-
-    for(let i = 0; i < 100; i++) particulas.push(new Particula());
-
-    function dibujarLineas() {
-        for(let i = 0; i < particulas.length; i++) {
-            for(let j = i+1; j < particulas.length; j++) {
-                let dx = particulas[i].x - particulas[j].x;
-                let dy = particulas[i].y - particulas[j].y;
-                let d = Math.sqrt(dx*dx + dy*dy);
-                if(d < 150) {
-                    ctx.beginPath();
-                    ctx.moveTo(particulas[i].x, particulas[i].y);
-                    ctx.lineTo(particulas[j].x, particulas[j].y);
-                    ctx.strokeStyle = `rgba(100,180,255,${0.25-d/600})`;
-                    ctx.lineWidth = 0.7;
-                    ctx.stroke();
-                }
-            }
-        }
-    }
-
-    function animar() {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-        particulas.forEach(p => { p.actualizar(); p.dibujar(); });
-        dibujarLineas();
-        requestAnimationFrame(animar);
-    }
-    animar();
+    // Permitir presionar Enter para acceder
+    document.getElementById('clave').addEventListener('keypress', e => {
+        if (e.key === 'Enter') verificarClave();
+    });
 </script>
 
 </body>
