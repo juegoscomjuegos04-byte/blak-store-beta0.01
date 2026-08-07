@@ -1,97 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Prueba de Acceso</title>
+    <title>Archivos - Blask Store</title>
     <style>
         body {
             font-family: Arial;
-            background: #1a1a1a;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .caja {
-            background: #2d2d2d;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            width: 320px;
             text-align: center;
+            padding-top: 40px;
+            background: #f0f0f0;
         }
-        h2 { color: #4CAF50; margin-bottom: 30px; }
+        h1 { color: #2c3e50; }
+        .descripcion { color: #555; margin-bottom: 30px; }
+        .enlace {
+            display: inline-block;
+            width: 80%;
+            max-width: 500px;
+            margin: 10px auto;
+            padding: 15px 20px;
+            background: #27ae60;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 17px;
+            transition: 0.2s;
+        }
+        .enlace:hover { background: #219653; }
+
+        /* === ESTILOS DEL BLOQUEO === */
+        .caja-bloqueo {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            max-width: 350px;
+            margin: 0 auto;
+        }
         input {
-            width: 100%;
+            width: 90%;
             padding: 12px;
             margin: 8px 0;
-            border: none;
+            border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 16px;
-            box-sizing: border-box;
         }
         button {
-            width: 100%;
-            padding: 12px;
-            background: #4CAF50;
+            padding: 12px 30px;
+            background: #e74c3c;
             color: white;
             border: none;
             border-radius: 6px;
             font-size: 17px;
-            margin-top: 10px;
             cursor: pointer;
         }
-        button:hover { background: #45a049; }
-        .error {
-            color: #ff4444;
-            margin-top: 15px;
-            display: none;
-        }
+        button:hover { background: #c0392b; }
+        .error { color: red; margin-top: 10px; display: none; }
         .oculto { display: none; }
-        .exito { color: #4CAF50; font-size: 20px; }
     </style>
 </head>
 <body>
 
-    <!-- PANTALLA DE LOGIN -->
-    <div id="pantalla-login" class="caja">
-        <h2>🔒 Área Restringida</h2>
-        <input type="text" id="usuario" placeholder="Nombre de usuario">
-        <input type="password" id="contrasena" placeholder="Contraseña">
-        <button onclick="verificar()">Ingresar</button>
-        <p id="mensaje-error" class="error">❌ Usuario o contraseña incorrectos</p>
+    <!-- === PANTALLA DE BLOQUEO (aparece primero) === -->
+    <div id="pantalla-bloqueo" class="caja-bloqueo">
+        <h2>🔒 Ingresa la Contraseña</h2>
+        <p>Para ver las descargas, escribe la contraseña:</p>
+        <input type="password" id="pass" placeholder="Escribe aquí...">
+        <br>
+        <button onclick="verificarPass()">Entrar</button>
+        <p id="mensaje-error" class="error">❌ Contraseña incorrecta</p>
     </div>
 
-    <!-- PANTALLA DE ÉXITO (solo aparece si aciertas) -->
-    <div id="pantalla-exito" class="caja oculto">
-        <h2 class="exito">✅ ¡Acceso Concedido!</h2>
-        <p>Has ingresado correctamente.</p>
-        <p>Aquí puedes poner lo que quieras mostrar después de entrar.</p>
+    <!-- === TUS ENLACES (OCULTOS hasta acertar) === -->
+    <div id="contenido-enlaces" class="oculto">
+        <h1>📂 Tus Descargas</h1>
+        <p class="descripcion">Aquí están todos los enlaces directos:</p>
+
+        <a href="https://www.mediafire.com/file/31zzkrvwaz8t7d3/subnautica_1.21.82792-libreapk.com.apk/file" class="enlace">Subnautica</a>
+        <a href="https://www.mediafire.com/file/qz9p2beze5qv6dn/Slime_Rancher.apk/file" class="enlace">Slime Rancher</a>
+        <a href="https://www.mediafire.com/file/ju9w6zcjcx1tfpn/Hollow_Knight_%25283%2529.apk/file" class="enlace">Hollow Knight</a>
+        <a href="https://www.mediafire.com/file/kcf5kt4caz7o5lx/Daily_Lives_of_My_Countryside_Nekobot_com.nekobot.webview.nekobot_3.4.3_V1.apk/file" class="enlace">🏡 Daily Lives of My Countryside</a>
     </div>
 
 <script>
-    // === TUS DATOS DE ACCESO ===
-    const USUARIO_CORRECTO = "admin";
-    const CONTRASENA_CORRECTA = "1234";
+    // === TU CONTRASEÑA DE ACCESO ===
+    const CONTRASENA = "admin"; // Cámbiala por la que tú quieras
 
-    function verificar() {
-        // Leer lo que escribió el usuario
-        let usuario = document.getElementById('usuario').value;
-        let pass = document.getElementById('contrasena').value;
+    function verificarPass() {
+        let escrita = document.getElementById('pass').value;
         let error = document.getElementById('mensaje-error');
 
-        // COMPROBAR SI SON CORRECTOS
-        if(usuario === USUARIO_CORRECTO && pass === CONTRASENA_CORRECTA) {
-            // ✅ Si es correcto: cambia de pantalla
-            document.getElementById('pantalla-login').classList.add('oculto');
-            document.getElementById('pantalla-exito').classList.remove('oculto');
+        if(escrita === CONTRASENA) {
+            // ✅ Correcta: muestra los enlaces
+            document.getElementById('pantalla-bloqueo').classList.add('oculto');
+            document.getElementById('contenido-enlaces').classList.remove('oculto');
         } else {
-            // ❌ Si es incorrecto: muestra error pero NO avanza
+            // ❌ Incorrecta: muestra error y no deja ver nada
             error.style.display = "block";
-            // Borra lo escrito para intentar de nuevo
-            document.getElementById('usuario').value = "";
-            document.getElementById('contrasena').value = "";
+            document.getElementById('pass').value = "";
         }
     }
 </script>
