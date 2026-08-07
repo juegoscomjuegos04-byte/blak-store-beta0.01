@@ -13,35 +13,65 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            /* Mantenemos el degradado base pero sin ocupar todo el fondo */
+            background: #090e18;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative; /* Importante para el canvas */
+            overflow-x: hidden; /* Evitar barras horizontales */
+        }
+
+        /* Lienzo para el fondo de neuronas animado */
+        #neuronCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Lo pone detrás de todo */
         }
 
         .contenedor {
             width: 100%;
-            max-width: 650px;
-            background: rgba(255, 255, 255, 0.96);
+            max-width: 680px;
+            /* Cristal con un tono azul más oscuro para el fondo animado */
+            background: rgba(15, 23, 42, 0.9);
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
             padding: 45px 35px;
             text-align: center;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px); /* Más desenfoque */
+            position: relative; /* Para el z-index */
+            z-index: 10;
         }
 
         h1 {
             font-size: 30px;
-            color: #0f172a;
+            color: #f1f5f9; /* Color más claro para resaltar */
             margin-bottom: 12px;
             font-weight: 700;
             letter-spacing: -0.5px;
         }
 
+        h2 {
+            text-align: left;
+            font-size: 18px;
+            color: #94a3b8; /* Tono intermedio para categorías */
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 2px solid #2563eb;
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
         .subtitulo {
-            color: #64748b;
+            color: #94a3b8;
             font-size: 15px;
             margin-bottom: 40px;
         }
@@ -49,9 +79,9 @@
         .contador-grande {
             font-size: 72px;
             font-weight: 800;
-            color: #2563eb;
+            color: #3b82f6; /* Azul más brillante */
             margin: 35px 0;
-            text-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+            text-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
         .barra-progreso {
@@ -67,7 +97,7 @@
         .barra-llena {
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            background: linear-gradient(90deg, #3b82f6, #60a5fa); /* Degradado azul más claro */
             border-radius: 4px;
             transition: width 1s linear;
         }
@@ -81,6 +111,9 @@
             max-width: 340px;
             padding: 16px 20px;
             font-size: 17px;
+            /* Cristal en el input */
+            background: rgba(255, 255, 255, 0.08);
+            color: #f1f5f9;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
             outline: none;
@@ -89,26 +122,31 @@
         }
 
         input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+            border-color: #3b82f6;
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        }
+
+        input::placeholder {
+            color: #94a3b8;
         }
 
         button {
             padding: 15px 42px;
             font-size: 17px;
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
             color: white;
             border: none;
             border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
         }
 
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
         }
 
         button:active {
@@ -116,7 +154,7 @@
         }
 
         #error {
-            color: #dc2626;
+            color: #ef4444; /* Rojo brillante */
             margin-top: 18px;
             font-size: 14px;
             display: none;
@@ -125,17 +163,18 @@
 
         .lista-archivos {
             text-align: left;
-            margin-top: 30px;
+            margin-top: 10px;
         }
 
         .archivo-enlace {
             display: block;
             padding: 16px 20px;
             margin: 10px 0;
-            background: #f8fafc;
+            /* Cristal en los enlaces de archivo */
+            background: rgba(255, 255, 255, 0.05);
             border: 2px solid #e2e8f0;
             border-radius: 12px;
-            color: #1e293b;
+            color: #f1f5f9;
             text-decoration: none;
             font-size: 15px;
             font-weight: 500;
@@ -143,16 +182,16 @@
         }
 
         .archivo-enlace:hover {
-            background: #eff6ff;
-            border-color: #93c5fd;
-            color: #1d4ed8;
+            background: rgba(59, 130, 246, 0.1); /* Efecto azul suave */
+            border-color: #60a5fa;
+            color: #3b82f6;
             transform: translateX(6px);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
         }
 
         .etiqueta-descarga {
             float: right;
-            color: #2563eb;
+            color: #3b82f6;
             font-weight: 600;
             font-size: 14px;
         }
@@ -161,18 +200,48 @@
             display: block;
             margin-top: 8px;
             font-size: 12px;
-            color: #64748b;
+            color: #94a3b8;
             font-family: monospace;
-            background: #f1f5f9;
+            background: rgba(0, 0, 0, 0.2); /* Fondo oscuro para el código */
             padding: 6px 10px;
             border-radius: 6px;
             word-break: break-all;
         }
 
         .oculto { display: none !important; }
+
+        /* Ajustes para pantallas pequeñas (móviles) */
+        @media (max-width: 600px) {
+            .contenedor {
+                padding: 30px 20px;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .contador-grande {
+                font-size: 56px;
+                margin: 25px 0;
+            }
+            h2 {
+                font-size: 16px;
+                margin-top: 25px;
+                margin-bottom: 12px;
+            }
+            .archivo-enlace {
+                padding: 14px 16px;
+                font-size: 14px;
+            }
+            .etiqueta-descarga {
+                font-size: 13px;
+                margin-top: 2px;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <!-- Canvas para el fondo animado de neuronas -->
+    <canvas id="neuronCanvas"></canvas>
 
     <div class="contenedor">
 
@@ -203,6 +272,8 @@
             <p class="subtitulo">Selecciona y descarga el recurso que necesites</p>
             <div class="lista-archivos">
 
+                <h2>Juegos Completos</h2>
+
                 <a href="https://www.mediafire.com/file/31zzkrvwaz8t7d3/subnautica_1.21.82792-libreapk.com.apk/file" target="_blank" class="archivo-enlace">
                     Subnautica <span class="etiqueta-descarga">Descargar</span>
                 </a>
@@ -218,6 +289,8 @@
                 <a href="https://www.mediafire.com/file/kcf5kt4caz7o5lx/Daily_Lives_of_My_Countryside_Nekobot_com.nekobot.webview.nekobot_3.4.3_V1.apk/file" target="_blank" class="archivo-enlace">
                     Daily Lives of My Countryside <span class="etiqueta-descarga">Descargar</span>
                 </a>
+
+                <h2>Paneles y Proxys</h2>
 
                 <a href="https://www.mediafire.com/file/egi9gd0dmyxyyny/Apelox_Hub_%2528Copy%2529_1.apk/file" target="_blank" class="archivo-enlace">
                     Apelox Hub <span class="etiqueta-descarga">Descargar</span>
@@ -235,14 +308,6 @@
                     PANEL V1 American Modz <span class="etiqueta-descarga">Descargar</span>
                 </a>
 
-                <a href="https://www.mediafire.com/file/u2opgiizog54fds/DPCLT-APKM0D-GLOBAL-v1.4x.apks/file" target="_blank" class="archivo-enlace">
-                    DPCLT - APKM0D v1.4x <span class="etiqueta-descarga">Descargar</span>
-                </a>
-
-                <a href="https://www.mediafire.com/file/9dgz3rrnis58cmu/Villager_Soldier_2_Version_3.1.4_The_Rise_By_Blockdestroyer.mcaddon/file/file" target="_blank" class="archivo-enlace">
-                    Villager Soldier 2 v3.1.4 <span class="etiqueta-descarga">Descargar</span>
-                </a>
-
                 <a href="https://www.mediafire.com/file/wza42orevid9cmd/CubanProxy-2.5.2.apk/file" target="_blank" class="archivo-enlace">
                     CubanProxy v2.5.2 <span class="etiqueta-descarga">Descargar</span>
                     <span class="etiqueta-codigo">Código: CUBAN-ADS5H-B9A70DF21</span>
@@ -250,7 +315,17 @@
 
                 <a href="https://www.mediafire.com/file/yfv4xlf32e8q9gv/Mth_proxy_actualizado.apk/file" target="_blank" class="archivo-enlace">
                     MTH Proxy Actualizado <span class="etiqueta-descarga">Descargar</span>
-                    <span class="etiqueta-codigo">Códigos: MTHFREE-RXOE0Q • MTHFREE-K7T3LA • MTHFREE-P9X2MN</span>
+                    <span class="etiqueta-codigo">Códigos: MTHFREE-RXOE0Q | MTHFREE-K7T3LA | MTHFREE-P9X2MN</span>
+                </a>
+
+                <h2>Mods y Utilidades</h2>
+
+                <a href="https://www.mediafire.com/file/9dgz3rrnis58cmu/Villager_Soldier_2_Version_3.1.4_The_Rise_By_Blockdestroyer.mcaddon/file/file" target="_blank" class="archivo-enlace">
+                    Villager Soldier 2 v3.1.4 <span class="etiqueta-descarga">Descargar</span>
+                </a>
+
+                <a href="https://www.mediafire.com/file/u2opgiizog54fds/DPCLT-APKM0D-GLOBAL-v1.4x.apks/file" target="_blank" class="archivo-enlace">
+                    DPCLT - APKM0D v1.4x <span class="etiqueta-descarga">Descargar</span>
                 </a>
 
                 <a href="https://www.mediafire.com/file/p55cjbiycq1eyw8/NikuMods_1.0.apk/file" target="_blank" class="archivo-enlace">
@@ -263,8 +338,109 @@
     </div>
 
 <script>
+    // --- CÓDIGO DEL FONDO ANIMADO (NEURONAS) ---
+    const canvas = document.getElementById('neuronCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Ajustar el tamaño del canvas a la pantalla entera
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Configuración de las partículas (puntos)
+    const particulas = [];
+    // Ajusta este número si la animación va lenta (menos = más rápido)
+    const numeroParticulas = 80; 
+    // Distancia máxima para conectar puntos (más grande = más líneas)
+    const distanciaMaxConexion = 120; 
+
+    // Crear la clase Partícula
+    class Particula {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 1; // Velocidad X suave
+            this.vy = (Math.random() - 0.5) * 1; // Velocidad Y suave
+            this.radius = 1.5; // Tamaño del punto
+        }
+
+        // Mover la partícula y hacerla rebotar en los bordes
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        }
+
+        // Dibujar el punto
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.random() * 2);
+            // Color azul transparente para el punto
+            ctx.fillStyle = 'rgba(59, 130, 246, 0.4)'; 
+            ctx.fill();
+        }
+    }
+
+    // Inicializar las partículas
+    function init() {
+        for (let i = 0; i < numeroParticulas; i++) {
+            particulas.push(new Particula());
+        }
+    }
+    init();
+
+    // Dibujar las líneas (conexiones) entre puntos cercanos
+    function drawConnections() {
+        for (let i = 0; i < particulas.length; i++) {
+            for (let j = i + 1; j < particulas.length; j++) {
+                const dx = particulas[i].x - particulas[j].x;
+                const dy = particulas[i].y - particulas[j].y;
+                const distancia = Math.sqrt(dx * dx + dy * dy);
+
+                if (distancia < distanciaMaxConexion) {
+                    ctx.beginPath();
+                    // Calcular opacidad según la distancia (más cerca = más visible)
+                    const opacidad = 1 - (distancia / distanciaMaxConexion);
+                    // Color azul transparente para la línea
+                    ctx.strokeStyle = `rgba(59, 130, 246, ${opacidad * 0.15})`; 
+                    ctx.lineWidth = 0.8;
+                    ctx.moveTo(particulas[i].x, particulas[i].y);
+                    ctx.lineTo(particulas[j].x, particulas[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    // El ciclo de animación principal
+    function animate() {
+        requestAnimationFrame(animate);
+        // Borrar el canvas en cada fotograma
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Actualizar y dibujar cada partícula
+        for (const particula of particulas) {
+            particula.update();
+            particula.draw();
+        }
+        
+        // Dibujar todas las conexiones
+        drawConnections();
+    }
+    animate();
+
+
+    // --- LÓGICA ORIGINAL DE LA PÁGINA (CONTADOR Y CONTRASEÑA) ---
+    
     // CONFIGURACIÓN
-    const CONTRASENA_CORRECTA = "admin";
+    // ADVERTENCIA DE SEGURIDAD: Esta contraseña es insegura y fácil de hackear. 
+    // Para una tienda real, esta validación debe hacerse en un servidor (backend).
+    const CONTRASENA_CORRECTA = "admin"; 
 
     // CONTADOR DE 5 SEGUNDOS
     let segundos = 5;
