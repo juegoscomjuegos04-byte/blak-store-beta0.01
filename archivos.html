@@ -49,24 +49,36 @@
             border-radius: 16px;
             box-shadow: 0 0 30px rgba(0,0,0,0.4);
             position: relative; z-index: 2;
+            
+            /* Corrección: Permite hacer scroll en celulares pequeños para que el botón no se oculte */
+            max-height: 85vh; 
+            overflow-y: auto; 
         }
         .caja-politicas h2 {
             text-align: center;
             color: #2c3e50;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            font-size: 22px;
         }
         .caja-politicas p {
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 12px;
+            font-size: 13px; /* <-- Letra de términos más pequeña */
+            line-height: 1.5;
+            margin-bottom: 10px;
             color: #333;
         }
         .caja-politicas .acepto {
-            margin-top: 20px;
+            margin-top: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
             font-weight: bold;
+            font-size: 14px; /* <-- Letra del checkbox ajustada */
+            cursor: pointer; /* <-- Hace que el cursor cambie para indicar que es clickeable */
+        }
+        .caja-politicas .acepto input {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
         }
         .caja-politicas button {
             width: 100%;
@@ -160,7 +172,7 @@
     <!-- === FONDO ANIMADO === -->
     <canvas id="fondo-particulas"></canvas>
 
-    <!-- === CAJA DE POLÍTICAS (aparece primero) === -->
+    <!-- === CAJA DE POLÍTICAS === -->
     <div id="caja-politicas" class="caja-politicas">
         <h2>📜 Políticas de Uso y Privacidad</h2>
         
@@ -184,7 +196,7 @@
         <button id="boton-entrar" disabled onclick="entrar()">✅ Entrar a las Descargas</button>
     </div>
 
-    <!-- === CONTENIDO PRINCIPAL (OCULTO hasta aceptar políticas) === -->
+    <!-- === CONTENIDO PRINCIPAL === -->
     <div id="contenido" class="oculto">
         <h1>📂 Tus Descargas</h1>
         <p class="descripcion">Aquí están todos los enlaces directos:</p>
@@ -224,11 +236,16 @@
     </div>
 
 <script>
-    // === ACTIVAR BOTÓN SOLO SI ACEPTA LAS POLÍTICAS ===
-    const checkbox = document.getElementById('acepto');
-    const botonEntrar = document.getElementById('boton-entrar');
-    checkbox.addEventListener('change', function() {
-        botonEntrar.disabled = !this.checked;
+    // === Corrección: Aseguramos que el código de habilitar botón se cargue correctamente ===
+    document.addEventListener('DOMContentLoaded', () => {
+        const checkbox = document.getElementById('acepto');
+        const botonEntrar = document.getElementById('boton-entrar');
+        
+        if (checkbox && botonEntrar) {
+            checkbox.addEventListener('change', function() {
+                botonEntrar.disabled = !this.checked;
+            });
+        }
     });
 
     // === ENTRAR A LAS DESCARGAS ===
@@ -239,10 +256,9 @@
 
     // === SIMULACIÓN DE INICIO DE SESIÓN CON GOOGLE ===
     let usuario = null;
-    const ADMIN_CORREO = "juegos.com.juegos05@gmail.com"; // ← PON TU CORREO AQUÍ
+    const ADMIN_CORREO = "tu.correo@gmail.com"; 
 
     function iniciarSesionGoogle() {
-        // Simulación — en versión real se conecta con Google
         let nombre = prompt("Escribe tu nombre para verificar:");
         let correo = prompt("Escribe tu correo de Google:");
 
@@ -264,7 +280,6 @@
         if(!usuario) { alert("Primero inicia sesión"); return; }
         if(!archivo) { alert("Selecciona un archivo"); return; }
 
-        // 📋 GUARDA TODO: Archivo + Quién + Correo + Fecha
         const registro = `
 📄 Archivo: ${archivo.name}
 👤 Subido por: ${usuario.nombre}
@@ -273,10 +288,8 @@
 ─────────────────────────────
         `;
 
-        // Agrega a la lista visible
         document.getElementById('lista-subidas').innerHTML += "<pre>"+registro+"</pre>";
 
-        // 📝 GUARDA EN ALMACENAMIENTO DEL NAVEGADOR
         let registros = JSON.parse(localStorage.getItem('registros') || '[]');
         registros.push({
             archivo: archivo.name,
@@ -288,8 +301,7 @@
 
         alert("✅ ¡Archivo registrado! Si hay problemas, ya tienes su correo para avisarle.");
         
-        // 🔑 SI ERES TÚ EL ADMIN, VE LA LISTA COMPLETA
-        if(usuario.correo === ADMIN_CORREO=) {
+        if(usuario.correo === ADMIN_CORREO) {
             console.log("=== LISTA COMPLETA DE SUBIDAS ===");
             registros.forEach(r => console.log(r));
             alert("🔐 Eres el administrador. Abre la consola (F12) para ver TODOS los correos.");
