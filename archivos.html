@@ -3,68 +3,103 @@
 <head>
     <title>Archivos - Blask Store</title>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: Arial;
             text-align: center;
             padding-top: 40px;
-            background: #f0f0f0;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
         }
-        h1 { color: #2c3e50; }
-        .descripcion { color: #555; margin-bottom: 30px; }
+
+        /* === FONDO ANIMADO DE PARTÍCULAS === */
+        #fondo-particulas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        h1 { color: #fff; position: relative; z-index: 1; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+        .descripcion { color: #ddd; margin-bottom: 30px; position: relative; z-index: 1; }
+
         .enlace {
             display: inline-block;
             width: 80%;
             max-width: 500px;
             margin: 10px auto;
             padding: 15px 20px;
-            background: #27ae60;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
             color: white;
             text-decoration: none;
             border-radius: 8px;
             font-size: 17px;
-            transition: 0.2s;
+            transition: 0.3s;
+            position: relative;
+            z-index: 1;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
         }
-        .enlace:hover { background: #219653; }
+        .enlace:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.5);
+            background: linear-gradient(135deg, #219653, #27ae60);
+        }
 
         /* === ESTILOS DEL BLOQUEO === */
         .caja-bloqueo {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.2);
-            max-width: 350px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.4);
+            max-width: 360px;
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(10px);
         }
+        .caja-bloqueo h2 { color: #2c3e50; margin-bottom: 20px; }
         input {
             width: 90%;
-            padding: 12px;
+            padding: 14px;
             margin: 8px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
             font-size: 16px;
+            transition: 0.2s;
         }
+        input:focus { outline: none; border-color: #e74c3c; }
         button {
-            padding: 12px 30px;
-            background: #e74c3c;
+            padding: 14px 35px;
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 17px;
+            font-weight: bold;
             cursor: pointer;
+            transition: 0.3s;
+            width: 90%;
         }
-        button:hover { background: #c0392b; }
-        .error { color: red; margin-top: 10px; display: none; }
+        button:hover { transform: scale(1.03); }
+        .error { color: #e74c3c; margin-top: 12px; display: none; font-weight: bold; }
         .oculto { display: none; }
     </style>
 </head>
 <body>
+
+    <!-- === FONDO ANIMADO DE PARTÍCULAS === -->
+    <canvas id="fondo-particulas"></canvas>
 
     <!-- === PANTALLA DE BLOQUEO (aparece primero) === -->
     <div id="pantalla-bloqueo" class="caja-bloqueo">
         <h2>🔒 Ingresa la Contraseña</h2>
         <p>Para ver las descargas, escribe la contraseña:</p>
         <input type="password" id="pass" placeholder="Escribe aquí...">
-        <br>
+        <br><br>
         <button onclick="verificarPass()">Entrar</button>
         <p id="mensaje-error" class="error">❌ Contraseña incorrecta</p>
     </div>
@@ -74,31 +109,106 @@
         <h1>📂 Tus Descargas</h1>
         <p class="descripcion">Aquí están todos los enlaces directos:</p>
 
-        <a href="https://www.mediafire.com/file/31zzkrvwaz8t7d3/subnautica_1.21.82792-libreapk.com.apk/file" class="enlace">Subnautica</a>
-        <a href="https://www.mediafire.com/file/qz9p2beze5qv6dn/Slime_Rancher.apk/file" class="enlace">Slime Rancher</a>
-        <a href="https://www.mediafire.com/file/ju9w6zcjcx1tfpn/Hollow_Knight_%25283%2529.apk/file" class="enlace">Hollow Knight</a>
+        <a href="https://www.mediafire.com/file/31zzkrvwaz8t7d3/subnautica_1.21.82792-libreapk.com.apk/file" class="enlace">🌊 Subnautica</a>
+        <a href="https://www.mediafire.com/file/qz9p2beze5qv6dn/Slime_Rancher.apk/file" class="enlace">🟢 Slime Rancher</a>
+        <a href="https://www.mediafire.com/file/ju9w6zcjcx1tfpn/Hollow_Knight_%25283%2529.apk/file" class="enlace">⚔️ Hollow Knight</a>
         <a href="https://www.mediafire.com/file/kcf5kt4caz7o5lx/Daily_Lives_of_My_Countryside_Nekobot_com.nekobot.webview.nekobot_3.4.3_V1.apk/file" class="enlace">🏡 Daily Lives of My Countryside</a>
+        <a href="https://www.mediafire.com/file/qj0ao0y34rlew6e/PROYX_v660.apk/file" class="enlace">📱 PROYX v660</a>
+        <a href="https://www.mediafire.com/file/u2opgiizog54fds/DPCLT-APKM0D-GLOBAL-v1.4x.apks/file" class="enlace">🎮 DPCLT - APKM0D v1.4x</a>
     </div>
 
 <script>
     // === TU CONTRASEÑA DE ACCESO ===
-    const CONTRASENA = "admin"; // Cámbiala por la que tú quieras
+    const CONTRASENA = "admin";
 
     function verificarPass() {
         let escrita = document.getElementById('pass').value;
         let error = document.getElementById('mensaje-error');
 
         if(escrita === CONTRASENA) {
-            // ✅ Correcta: muestra los enlaces
             document.getElementById('pantalla-bloqueo').classList.add('oculto');
             document.getElementById('contenido-enlaces').classList.remove('oculto');
         } else {
-            // ❌ Incorrecta: muestra error y no deja ver nada
             error.style.display = "block";
             document.getElementById('pass').value = "";
         }
     }
+
+    // === ANIMACIÓN DE PARTÍCULAS EN MOVIMIENTO ===
+    const canvas = document.getElementById('fondo-particulas');
+    const ctx = canvas.getContext('2d');
+    let particulas = [];
+
+    function ajustarCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', ajustarCanvas);
+    ajustarCanvas();
+
+    class Particula {
+        constructor() {
+            this.reiniciar();
+        }
+        reiniciar() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.tamano = Math.random() * 3 + 1;
+            this.velocidadX = (Math.random() - 0.5) * 0.5;
+            this.velocidadY = (Math.random() - 0.5) * 0.5;
+            this.color = `rgba(${Math.random()*100+100}, ${Math.random()*100+150}, 255, ${Math.random()*0.5+0.2})`;
+        }
+        actualizar() {
+            this.x += this.velocidadX;
+            this.y += this.velocidadY;
+            if(this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                this.reiniciar();
+            }
+        }
+        dibujar() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.tamano, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+    }
+
+    // Crear partículas
+    for(let i = 0; i < 120; i++) {
+        particulas.push(new Particula());
+    }
+
+    // Dibujar líneas entre partículas cercanas
+    function dibujarLineas() {
+        for(let i = 0; i < particulas.length; i++) {
+            for(let j = i + 1; j < particulas.length; j++) {
+                let dx = particulas[i].x - particulas[j].x;
+                let dy = particulas[i].y - particulas[j].y;
+                let distancia = Math.sqrt(dx*dx + dy*dy);
+                if(distancia < 150) {
+                    ctx.beginPath();
+                    ctx.moveTo(particulas[i].x, particulas[i].y);
+                    ctx.lineTo(particulas[j].x, particulas[j].y);
+                    ctx.strokeStyle = `rgba(100, 180, 255, ${0.25 - distancia/600})`;
+                    ctx.lineWidth = 0.8;
+                    ctx.stroke();
+                }
+            }
+        }
+    }
+
+    // Bucle de animación
+    function animar() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particulas.forEach(p => {
+            p.actualizar();
+            p.dibujar();
+        });
+        dibujarLineas();
+        requestAnimationFrame(animar);
+    }
+    animar();
 </script>
 
-</body>
+</body>     
 </html>
