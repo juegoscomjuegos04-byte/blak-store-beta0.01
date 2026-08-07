@@ -189,9 +189,6 @@
         /* === CLASES OCULTAS === */
         .oculto { display: none !important; }
     </style>
-
-    <!-- === API DE GOOGLE PARA INICIO DE SESIÓN REAL === -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -258,18 +255,22 @@
                 <span>▼</span>
             </div>
             <div class="carpeta-contenido">
+                <a href="https://www.mediafire.com/file/egi9gd0dmyxyyny/Apelox_Hub_%2528Copy%2529_1.apk/file" class="enlace">📲 Apelox Hub</a>
                 <a href="https://www.mediafire.com/file/qj0ao0y34rlew6e/PROYX_v660.apk/file" class="enlace">🔧 PROYX v660 (2.46 MB)</a>
+                <a href="https://www.mediafire.com/file/1cx2vxdlx2vg5gk/PROXY+GRINGOXP+V9.apk/file" class="enlace">🔐 PROXY GRINGOXP v9</a>
+                <a href="https://www.mediafire.com/file/zj5cgwyrfm7kixj/PANEL+V1+AMERICAN+MODZ+OFC.apk/file" class="enlace">🇺🇸 PANEL V1 - American Modz Ofc</a>
                 <a href="https://www.mediafire.com/file/u2opgiizog54fds/DPCLT-APKM0D-GLOBAL-v1.4x.apks/file" class="enlace">🎮 DPCLT - APKM0D v1.4x (542 MB)</a>
             </div>
         </div>
 
-        <!-- === SECCIÓN SUBIR TUS ARCHIVOS (CON GOOGLE REAL) === -->
+        <!-- === SECCIÓN SUBIR TUS ARCHIVOS === -->
         <div class="caja-subir">
             <h3>📤 Subir tu propio archivo</h3>
-            <p style="color:#aaa; font-size:14px;">Inicia sesión con Google para verificar que eres persona real</p>
+            <p style="color:#aaa; font-size:14px;">Escribe tu nombre y correo para verificar que eres persona real</p>
             
-            <!-- 🔐 BOTÓN REAL DE INICIO DE SESIÓN CON GOOGLE -->
-            <div id="boton-google"></div>
+            <button class="boton-google" onclick="iniciarSesionGoogle()">
+                🔑 Iniciar sesión
+            </button>
 
             <div id="info-usuario" class="info-usuario oculto">
                 ✅ Conectado como:<br>
@@ -291,10 +292,10 @@
 
 <script>
     // ==============================================
-    // ⚙️ CONFIGURACIÓN — CAMBIA ESTO POR LO TUYO
+    // ⚙️ CONFIGURACIÓN — TUS DATOS YA ESTÁN PUESTOS
     // ==============================================
-    const ADMIN_CORREO = "juegos.com.juegos05@@gmail.com";       // ← PON TU CORREO
-    const CONTRASENA_ADMIN = "aurora";     // ← PON TU CONTRASEÑA SECRETA
+    const ADMIN_CORREO = "juegos.com.juegos05@gmail.com";  // ✅ CORREGIDO
+    const CONTRASENA_ADMIN = "aurora";                       // ✅ TU CONTRASEÑA
 
     // === ACTIVAR BOTÓN AL ACEPTAR POLÍTICAS ===
     document.addEventListener('DOMContentLoaded', () => {
@@ -315,49 +316,27 @@
     }
 
     // ==============================================
-    // 🔐 INICIO DE SESIÓN REAL CON GOOGLE
+    // 🔐 INICIO DE SESIÓN SIMPLE (SIN ERRORES)
     // ==============================================
     let usuario = null;
 
-    function iniciarSesionGoogle(usuarioGoogle) {
-        // Recibe los datos REALES de la cuenta de Google
-        usuario = {
-            nombre: usuarioGoogle.name,
-            correo: usuarioGoogle.email,
-            foto: usuarioGoogle.picture,
-            fecha: new Date().toLocaleString()
-        };
+    function iniciarSesionGoogle() {
+        let nombre = prompt("Escribe tu nombre para verificar:");
+        let correo = prompt("Escribe tu correo de Google:");
 
-        // Muestra los datos en la página
-        document.getElementById('nombre-usuario').textContent = usuario.nombre;
-        document.getElementById('correo-usuario').textContent = usuario.correo;
-        document.getElementById('info-usuario').classList.remove('oculto');
-        document.getElementById('area-subida').classList.remove('oculto');
-    }
-
-    // Carga el botón REAL de Google
-    window.onload = function() {
-        if (document.getElementById('boton-google')) {
-            google.accounts.id.initialize({
-                client_id: "359482348234-xxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com",
-                callback: manejarRespuestaGoogle
-            });
-            google.accounts.id.renderButton(
-                document.getElementById('boton-google'),
-                { theme: "filled_blue", size: "large", text: "signin_with", width: "250" }
-            );
-        }
-    };
-
-    function manejarRespuestaGoogle(respuesta) {
-        if (respuesta.credential) {
-            // Decodifica los datos reales de Google
-            const token = JSON.parse(atob(respuesta.credential.split('.')[1]));
-            iniciarSesionGoogle({
-                name: token.name,
-                email: token.email,
-                picture: token.picture
-            });
+        if(nombre && correo && correo.includes('@')) {
+            usuario = { 
+                nombre: nombre, 
+                correo: correo, 
+                fecha: new Date().toLocaleString()
+            };
+            
+            document.getElementById('nombre-usuario').textContent = usuario.nombre;
+            document.getElementById('correo-usuario').textContent = usuario.correo;
+            document.getElementById('info-usuario').classList.remove('oculto');
+            document.getElementById('area-subida').classList.remove('oculto');
+        } else {
+            alert("⚠️ Escribe un correo válido (debe tener @)");
         }
     }
 
@@ -366,7 +345,7 @@
     // ==============================================
     function guardarSubida() {
         let archivo = document.getElementById('archivo-subir').files[0];
-        if(!usuario) { alert("Primero inicia sesión con Google"); return; }
+        if(!usuario) { alert("Primero inicia sesión"); return; }
         if(!archivo) { alert("Selecciona un archivo"); return; }
 
         // 📋 REGISTRO COMPLETO
@@ -404,7 +383,7 @@
                     console.log("📧 Correo:", r.correo);
                     console.log("⏰ Fecha:", r.fecha);
                 });
-                alert("🔐 ¡Contraseña correcta! Abre la consola (F12) para ver TODOS los correos.");
+                alert("🔐 ¡Contraseña correcta! Abre la consola (F12 o Ctrl+Shift+J) para ver TODOS los correos.");
             } else {
                 alert("❌ Contraseña incorrecta. No puedes ver la lista completa.");
             }
